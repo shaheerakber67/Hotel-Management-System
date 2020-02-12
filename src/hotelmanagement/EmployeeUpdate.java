@@ -5,6 +5,7 @@
  */
 package hotelmanagement;
 
+import com.sun.glass.events.KeyEvent;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,9 +13,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+
 
 /**
  *
@@ -24,6 +30,8 @@ public class EmployeeUpdate extends javax.swing.JFrame {
     Connection con;
     Statement stmt;
     PreparedStatement stat;
+   
+   
     public EmployeeUpdate() throws SQLException {
         setIconImage(Toolkit.getDefaultToolkit().getImage("icon64.ico"));
         
@@ -31,8 +39,51 @@ public class EmployeeUpdate extends javax.swing.JFrame {
         con=hotelmanagement.JDBCConnection.getConnection();
         stmt=con.createStatement();
         initComponents();
+        show_Employees();
     }
-
+public ArrayList<Employees> employeeList() throws SQLException
+{
+    
+    ArrayList<Employees> employeesList= new ArrayList<>();
+     try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url="jdbc:sqlserver://localhost:1433;" +
+           "databaseName=HOTEL_MANAGEMENT;user=shaheer;password=123";
+            Connection con=DriverManager.getConnection(url);
+            String query1="SELECT * from EMPLOYEES";
+            Statement st=con.createStatement();
+            ResultSet rs=st.executeQuery(query1);
+              
+            Employees employees;
+            while(rs.next()){
+                employees=new Employees(rs.getString("ID"),rs.getString("Name"),rs.getString("Designation"),rs.getString("Address"),rs.getString("Telephone"),rs.getString("E-MAIL"),rs.getString("Fax"));
+                   employeesList.add(employees);
+  
+            }      
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null,e); 
+        }
+    return employeesList;
+    
+}
+public void show_Employees() throws SQLException{
+    
+        ArrayList<Employees> list=employeeList();
+        DefaultTableModel model= (DefaultTableModel)jTable_Display_Employees.getModel();
+        Object[] row=new Object[7];
+        
+        for(int i=0;i<list.size();i++){
+        row[0]=list.get(i).getID();
+        row[1]=list.get(i).getName();
+        row[2]=list.get(i).getDesignation();
+        row[3]=list.get(i).getAddress();
+        row[4]=list.get(i).getTelephone();
+        row[5]=list.get(i).getEmail();
+        row[6]=list.get(i).getFax();
+        model.addRow(row);
+        }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,8 +113,9 @@ public class EmployeeUpdate extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable_Display_Employees = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -189,6 +241,26 @@ public class EmployeeUpdate extends javax.swing.JFrame {
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/royalhotel/banner2.png"))); // NOI18N
         jLabel8.setText("jLabel8");
 
+        jTable_Display_Employees.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Name", "Designation", "Address", "Telephone", "Email", "Fax"
+            }
+        ));
+        jTable_Display_Employees.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable_Display_EmployeesMouseClicked(evt);
+            }
+        });
+        jTable_Display_Employees.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable_Display_EmployeesKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable_Display_Employees);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -196,55 +268,48 @@ public class EmployeeUpdate extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(5, 5, 5)
+                        .addComponent(jButton2)
+                        .addGap(112, 112, 112)
+                        .addComponent(jButton3))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(jButton2)
-                                .addGap(112, 112, 112)
-                                .addComponent(jButton3))
+                            .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel6)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel1))
-                                        .addGap(72, 72, 72)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addGap(18, 18, 18)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(72, 72, 72)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton6)
-                                    .addComponent(jButton4)
-                                    .addComponent(jButton5)
-                                    .addComponent(jButton1))))
-                        .addContainerGap(35, Short.MAX_VALUE))))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton6)
+                            .addComponent(jButton4)
+                            .addComponent(jButton5)
+                            .addComponent(jButton1))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -284,14 +349,19 @@ public class EmployeeUpdate extends javax.swing.JFrame {
                     .addComponent(jButton2)
                     .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        String s=(String)jComboBox1.getSelectedItem();
-        jTextField7.setText(s);
+        
+        String designation;
+        designation=jComboBox1.getSelectedItem().toString();
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
@@ -304,21 +374,27 @@ public class EmployeeUpdate extends javax.swing.JFrame {
         stat=con.prepareStatement("INSERT INTO EMPLOYEES VALUES(?,?,?,?,?,?,?)");
         stat.setString(1,jTextField1.getText());
         stat.setString(2,jTextField2.getText());
-        stat.setString(3,jTextField7.getText());
+        String designation;
+        designation=jComboBox1.getSelectedItem().toString();
+        stat.setString(3, designation);
         stat.setString(4,jTextField3.getText());
         stat.setString(5,jTextField4.getText());
         stat.setString(6,jTextField5.getText());
         stat.setString(7,jTextField6.getText());
        
         stat.executeUpdate();
-
+        DefaultTableModel model=(DefaultTableModel)jTable_Display_Employees.getModel();
             JOptionPane.showMessageDialog(rootPane, "User Added Sucessfully");
+            model.setRowCount(0);
+            show_Employees();
             jTextField1.setText("");
             jTextField2.setText("");
             jTextField3.setText("");
             jTextField4.setText("");
             jTextField5.setText("");
             jTextField6.setText("");
+            
+         
         }catch(Exception ex){
             JOptionPane.showMessageDialog(rootPane, ex, null, JOptionPane.ERROR_MESSAGE);
         }
@@ -334,7 +410,9 @@ try{
         stat=con.prepareStatement("DELETE FROM EMPLOYEES WHERE ID=?");
         stat.setString(1,jTextField1.getText());
         stat.executeUpdate();
-        
+        DefaultTableModel model=(DefaultTableModel)jTable_Display_Employees.getModel();
+         model.setRowCount(0);
+         show_Employees();
         JOptionPane.showMessageDialog(rootPane, "User Deleted Sucessfully", null,JOptionPane.WARNING_MESSAGE);
         jTextField1.setText("");
         }catch(Exception ex){
@@ -352,13 +430,17 @@ try{
             stat=con.prepareStatement("UPDATE EMPLOYEES SET NAME=?,DESIGNATION=?,ADDRESS=?,TELEPHONE=?,\"E-MAIL\"=?,FAX=? WHERE ID=?");
             stat.setString(7,jTextField1.getText());
             stat.setString(1,jTextField2.getText());
-            stat.setString(2,jTextField7.getText());
+            String designation;
+            designation=jComboBox1.getSelectedItem().toString();
+            stat.setString(3, designation);
             stat.setString(3,jTextField3.getText());
             stat.setString(4,jTextField4.getText());
             stat.setString(5,jTextField5.getText());
             stat.setString(6,jTextField6.getText());
             stat.executeUpdate();
-
+            DefaultTableModel model=(DefaultTableModel)jTable_Display_Employees.getModel();
+            model.setRowCount(0);
+            show_Employees();
             JOptionPane.showMessageDialog(rootPane, "User Updated Sucessfully");
             jTextField1.setText("");
             jTextField2.setText("");
@@ -423,6 +505,68 @@ try{
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
+    private void jTable_Display_EmployeesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_Display_EmployeesMouseClicked
+        // TODO add your handling code here:
+        int i=jTable_Display_Employees.getSelectedRow();
+        TableModel model=jTable_Display_Employees.getModel();
+        jTextField1.setText(model.getValueAt(i, 0).toString());
+        jTextField2.setText(model.getValueAt(i, 1).toString());
+        String designation=model.getValueAt(i, 2).toString();
+            switch(designation){
+                case "Assistant":
+                    jComboBox1.setSelectedIndex(0);
+                    break;
+                 case "Executive":
+                    jComboBox1.setSelectedIndex(1);
+                    break;
+                 case "HouseKeeping":
+                    jComboBox1.setSelectedIndex(2);
+                    break;   
+                 case "Manager":
+                    jComboBox1.setSelectedIndex(3);
+                    break;
+                case "Vice President":
+                    jComboBox1.setSelectedIndex(4);
+                    break;
+            }
+           jTextField3.setText(model.getValueAt(i, 3).toString());    
+           jTextField4.setText(model.getValueAt(i, 4).toString());     
+           jTextField5.setText(model.getValueAt(i, 5).toString());   
+           jTextField6.setText(model.getValueAt(i, 6).toString());  
+    }//GEN-LAST:event_jTable_Display_EmployeesMouseClicked
+
+    private void jTable_Display_EmployeesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable_Display_EmployeesKeyReleased
+        if(evt.getKeyCode()==KeyEvent.VK_UP ||evt.getKeyCode()==KeyEvent.VK_DOWN){
+        int i=jTable_Display_Employees.getSelectedRow();
+        TableModel model=jTable_Display_Employees.getModel();
+        jTextField1.setText(model.getValueAt(i, 0).toString());
+        jTextField2.setText(model.getValueAt(i, 1).toString());
+        String designation=model.getValueAt(i, 2).toString();
+            switch(designation){
+                case "Assistant":
+                    jComboBox1.setSelectedIndex(0);
+                    break;
+                 case "Executive":
+                    jComboBox1.setSelectedIndex(1);
+                    break;
+                 case "HouseKeeping":
+                    jComboBox1.setSelectedIndex(2);
+                    break;   
+                 case "Manager":
+                    jComboBox1.setSelectedIndex(3);
+                    break;
+                case "Vice President":
+                    jComboBox1.setSelectedIndex(4);
+                    break;
+            }
+           jTextField3.setText(model.getValueAt(i, 3).toString());    
+           jTextField4.setText(model.getValueAt(i, 4).toString());     
+           jTextField5.setText(model.getValueAt(i, 5).toString());   
+           jTextField6.setText(model.getValueAt(i, 6).toString());  
+        
+        }
+    }//GEN-LAST:event_jTable_Display_EmployeesKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -478,12 +622,13 @@ try{
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable_Display_Employees;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
 }
