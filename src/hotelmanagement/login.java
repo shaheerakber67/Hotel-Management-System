@@ -166,6 +166,8 @@ public class login extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
+            String luser=jTextField1.getText();
+            String lpass=jPasswordField1.getText();
             String sql = "Select * from USERLOGIN where Users=? and Password = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, jTextField1.getText());
@@ -173,23 +175,32 @@ public class login extends javax.swing.JFrame {
             ResultSet rs = pst.executeQuery();
             int i=0;
              if(rs.next()){
-                JOptionPane.showMessageDialog(null, "Username and Password Matched");
-                WelcomePage field= new WelcomePage();
-                field.setVisible(true);
- 
+                if(luser.equals(rs.getString("Users"))&&(lpass.equals(rs.getString("Password")))){
+                    i=1;
+                if("admin".equals(luser)){
+                WelcomePage.main(args);
+                }
+                else if("frntoffice".equals(luser)){
+                RoomReservation.main(args);
+                }else if("employee".equals(luser)){
+                EmployeeUpdate.main(args);
+                }else if("gm".equals(luser)){
+                GeneralManager.main(args);
+                }else{
+                HouseKeeping.main(args);
+                }
+                }
                 setVisible(false);
              }
-            else{
-                JOptionPane.showMessageDialog(null, "Username and password not Correct");
-                jTextField1.setText("");
-                jPasswordField1.setText("");
+            if(i==0){
+            JOptionPane.showMessageDialog(rootPane, "No Such UserName or Password Found", "User Not Found", JOptionPane.ERROR_MESSAGE);
             }
-            con.close();
+            
             // TODO add your handling code here:
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ex, null, JOptionPane.ERROR_MESSAGE);
         }
-
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
