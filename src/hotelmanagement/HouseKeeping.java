@@ -106,6 +106,7 @@ public class HouseKeeping extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("House keeping Page");
 
         jPanel1.setBackground(new java.awt.Color(1, 126, 180));
 

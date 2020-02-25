@@ -64,6 +64,7 @@ public class Payment extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Payment Page");
 
         jPanel1.setBackground(new java.awt.Color(1, 126, 180));
 

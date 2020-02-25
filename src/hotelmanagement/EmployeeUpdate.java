@@ -119,6 +119,7 @@ public void show_Employees() throws SQLException{
         jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Employee Update");
 
         jPanel1.setBackground(new java.awt.Color(1, 126, 180));
 
@@ -462,7 +463,7 @@ try{
             stat.setString(1,jTextField2.getText());
             String designation;
             designation=jComboBox1.getSelectedItem().toString();
-            stat.setString(3, designation);
+            stat.setString(2, designation);
             stat.setString(3,jTextField3.getText());
             stat.setString(4,jTextField4.getText());
             stat.setString(5,jTextField5.getText());
